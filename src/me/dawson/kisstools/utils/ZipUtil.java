@@ -1,29 +1,84 @@
 package me.dawson.kisstools.utils;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.List;
+import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
-import android.text.TextUtils;
+import android.util.Log;
 
 public class ZipUtil {
 	public static final String TAG = "ZipUtil";
 
-	public static boolean zip(String zipPath, List<String> filePaths) {
-		if (TextUtils.isEmpty(zipPath) || filePaths == null
-				|| filePaths.isEmpty()) {
+	private final static int BUFFER_SIZE = 8192;
+
+	public static boolean zip(String filePath, String zipPath) {
+		try {
+			File file = new File(filePath);
+			BufferedInputStream bis = null;
+			FileOutputStream fos = new FileOutputStream(zipPath);
+			ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
+					fos));
+			if (file.isDirectory()) {
+				int baseLength = file.getParent().length() + 1;
+				zipFolder(zos, file, baseLength);
+			} else {
+				byte data[] = new byte[BUFFER_SIZE];
+				FileInputStream fis = new FileInputStream(filePath);
+				bis = new BufferedInputStream(fis, BUFFER_SIZE);
+				String entryName = file.getName();
+				Log.i(TAG, "zip entry " + entryName);
+				ZipEntry entry = new ZipEntry(entryName);
+				zos.putNextEntry(entry);
+				int count;
+				while ((count = bis.read(data, 0, BUFFER_SIZE)) != -1) {
+					zos.write(data, 0, count);
+				}
+			}
+			zos.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
-
-		FileUtil.delete(zipPath);
-		if (!FileUtil.create(zipPath)) {
-			LogUtil.e(TAG, "failed to create zip file");
-			return false;
-		}
-
 		return true;
+	}
+
+	private static void zipFolder(ZipOutputStream zos, File folder,
+			int baseLength) throws IOException {
+		if (zos == null || folder == null) {
+			return;
+		}
+		File[] fileList = folder.listFiles();
+
+		if (fileList == null || fileList.length == 0) {
+			return;
+		}
+
+		for (File file : fileList) {
+			if (file.isDirectory()) {
+				zipFolder(zos, file, baseLength);
+			} else {
+				byte data[] = new byte[BUFFER_SIZE];
+				String unmodifiedFilePath = file.getPath();
+				String realPath = unmodifiedFilePath.substring(baseLength);
+				Log.i(TAG, "zip entry " + realPath);
+				FileInputStream fi = new FileInputStream(unmodifiedFilePath);
+				BufferedInputStream bis = new BufferedInputStream(fi,
+						BUFFER_SIZE);
+				ZipEntry entry = new ZipEntry(realPath);
+				zos.putNextEntry(entry);
+				int count;
+				while ((count = bis.read(data, 0, BUFFER_SIZE)) != -1) {
+					zos.write(data, 0, count);
+				}
+				bis.close();
+			}
+		}
 	}
 
 	public static boolean unzip(String zipPath, String unzipFolder) {
@@ -42,21 +97,22 @@ public class ZipUtil {
 			ZipInputStream zin = new ZipInputStream(fin);
 			ZipEntry ze = null;
 			while ((ze = zin.getNextEntry()) != null) {
-				String zeName = ze.getName();
-				LogUtil.d(TAG, "unzip entry " + zeName);
+				String entryName = ze.getName();
+				LogUtil.d(TAG, "unzip entry " + entryName);
 
-				String zePath = unzipFolder + "/" + zeName;
+				String entryPath = unzipFolder + "/" + entryName;
 				if (ze.isDirectory()) {
-					FileUtil.mkdirs(zePath);
+					FileUtil.mkdirs(entryPath);
 				} else {
-					FileOutputStream fout = new FileOutputStream(zePath);
-
-					byte[] buffer = new byte[8192];
+					if (!FileUtil.create(entryPath, true)) {
+						continue;
+					}
+					FileOutputStream fout = new FileOutputStream(entryPath);
+					byte[] buffer = new byte[BUFFER_SIZE];
 					int len;
 					while ((len = zin.read(buffer)) != -1) {
 						fout.write(buffer, 0, len);
 					}
-
 					fout.close();
 					zin.closeEntry();
 				}
