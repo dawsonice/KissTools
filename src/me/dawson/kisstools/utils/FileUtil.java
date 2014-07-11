@@ -1,3 +1,11 @@
+/**
+ *
+ * Copyright (c) 2014 CoderKiss
+ *
+ * CoderKiss[AT]gmail.com
+ *
+ */
+
 package me.dawson.kisstools.utils;
 
 import java.io.File;
@@ -48,9 +56,9 @@ public class FileUtil {
 		if (exists(absPath) && !isFolder(absPath)) {
 			if (!force) {
 				return false;
+			} else {
+				delete(file);
 			}
-
-			delete(file);
 		}
 		try {
 			file.mkdirs();
@@ -132,23 +140,6 @@ public class FileUtil {
 			return false;
 		}
 		return file.exists();
-	}
-
-	public final static String getParent(String absPath) {
-		if (TextUtils.isEmpty(absPath)) {
-			return null;
-		}
-		absPath = cleanPath(absPath);
-		File file = new File(absPath);
-		return getParent(file);
-	}
-
-	public final static String getParent(File file) {
-		if (file == null) {
-			return null;
-		} else {
-			return file.getParent();
-		}
 	}
 
 	public static boolean childOf(String childPath, String parentPath) {
@@ -286,14 +277,90 @@ public class FileUtil {
 		return true;
 	}
 
-	public static String fileName(String absPath) {
+	public final static boolean isFile(String absPath) {
+		boolean exists = exists(absPath);
+		if (!exists) {
+			return false;
+		}
+
+		File file = new File(absPath);
+		return isFile(file);
+	}
+
+	public final static boolean isFile(File file) {
+		if (file == null) {
+			return false;
+		}
+
+		return file.isFile();
+	}
+
+	public final static boolean isFolder(String absPath) {
+		boolean exists = exists(absPath);
+		if (!exists) {
+			return false;
+		}
+
+		File file = new File(absPath);
+		return file.isDirectory();
+	}
+
+	public final static String getName(File file) {
+		if (file == null) {
+			return null;
+		} else {
+			return getName(file.getAbsolutePath());
+		}
+	}
+
+	public final static String getName(String absPath) {
+		if (TextUtils.isEmpty(absPath)) {
+			return absPath;
+		}
+
+		String fileName = null;
+		int index = absPath.lastIndexOf("/");
+		if (index > 0 && index < (absPath.length() - 1)) {
+			fileName = absPath.substring(index + 1, absPath.length());
+		}
+		return fileName;
+	}
+
+	public final static String getParent(File file) {
+		if (file == null) {
+			return null;
+		} else {
+			return file.getParent();
+		}
+	}
+
+	public final static String getParent(String absPath) {
 		if (TextUtils.isEmpty(absPath)) {
 			return null;
 		}
-
 		absPath = cleanPath(absPath);
 		File file = new File(absPath);
-		return file.getName();
+		return getParent(file);
+	}
+
+	public static String getStem(File file) {
+		if (file == null) {
+			return null;
+		}
+		return getStem(file.getName());
+	}
+
+	public final static String getStem(String fileName) {
+		if (TextUtils.isEmpty(fileName)) {
+			return null;
+		}
+
+		int index = fileName.lastIndexOf(".");
+		if (index > 0) {
+			return fileName.substring(0, index);
+		} else {
+			return "";
+		}
 	}
 
 	public static String getExtension(File file) {
@@ -337,59 +404,7 @@ public class FileUtil {
 		}
 	}
 
-	public final static boolean isFile(String absPath) {
-		boolean exists = exists(absPath);
-		if (!exists) {
-			return false;
-		}
-
-		File file = new File(absPath);
-		return isFile(file);
-	}
-
-	public final static boolean isFile(File file) {
-		if (file == null) {
-			return false;
-		}
-
-		return file.isFile();
-	}
-
-	public final static boolean isFolder(String absPath) {
-		boolean exists = exists(absPath);
-		if (!exists) {
-			return false;
-		}
-
-		File file = new File(absPath);
-		return file.isDirectory();
-	}
-
-	public final static String getFileName(String filePath) {
-		if (TextUtils.isEmpty(filePath)) {
-			return null;
-		}
-		int index = filePath.lastIndexOf("/");
-		if (index > 0 && index < (filePath.length() - 1)) {
-			filePath = filePath.substring(index + 1, filePath.length());
-		}
-		return filePath;
-	}
-
-	public final static String getFileStem(String fileName) {
-		if (TextUtils.isEmpty(fileName)) {
-			return null;
-		}
-
-		int index = fileName.lastIndexOf(".");
-		if (index > 0) {
-			return fileName.substring(0, index);
-		} else {
-			return "";
-		}
-	}
-
-	public static String getFileSHA1(String absPath) {
+	public static String fileSHA1(String absPath) {
 		if (TextUtils.isEmpty(absPath)) {
 			return null;
 		}
@@ -398,7 +413,7 @@ public class FileUtil {
 		if (!file.exists() || file.isDirectory()) {
 			return null;
 		}
-		String fileHash = null;
+		String fileSHA1 = null;
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(file);
@@ -414,22 +429,23 @@ public class FileUtil {
 				messageDigest.update(buffer, 0, length);
 			}
 			fis.close();
-			fileHash = SecurityUtil.bytes2Hex(messageDigest.digest());
+			fileSHA1 = SecurityUtil.bytes2Hex(messageDigest.digest());
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
 			try {
 				fis.close();
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
-		if (!TextUtils.isEmpty(fileHash)) {
-			fileHash = fileHash.trim();
+		if (!TextUtils.isEmpty(fileSHA1)) {
+			fileSHA1 = fileSHA1.trim();
 		}
-		return fileHash;
+		return fileSHA1;
 	}
 
-	public static String getFileMD5(String absPath) {
+	public static String fileMD5(String absPath) {
 		if (TextUtils.isEmpty(absPath)) {
 			return null;
 		}
@@ -437,7 +453,7 @@ public class FileUtil {
 		if (!file.exists() || file.isDirectory()) {
 			return null;
 		}
-		String fileHash = null;
+		String fileMD5 = null;
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(file);
@@ -453,18 +469,19 @@ public class FileUtil {
 				messageDigest.update(buffer, 0, length);
 			}
 			fis.close();
-			fileHash = SecurityUtil.bytes2Hex(messageDigest.digest());
+			fileMD5 = SecurityUtil.bytes2Hex(messageDigest.digest());
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
 			try {
 				fis.close();
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
-		if (!TextUtils.isEmpty(fileHash)) {
-			fileHash = fileHash.trim();
+		if (!TextUtils.isEmpty(fileMD5)) {
+			fileMD5 = fileMD5.trim();
 		}
-		return fileHash;
+		return fileMD5;
 	}
 }

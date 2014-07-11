@@ -1,3 +1,11 @@
+/**
+ *
+ * Copyright (c) 2014 CoderKiss
+ *
+ * CoderKiss[AT]gmail.com
+ *
+ */
+
 package me.dawson.kisstools.utils;
 
 import java.net.URLEncoder;
@@ -44,5 +52,20 @@ public class UrlUtil {
 
 		}
 		return uri;
+	}
+
+	public static String getParam(String url, String key) {
+		Uri uri = parseUrl(url);
+		if (uri == null) {
+			return null;
+		}
+
+		String value = null;
+		try {
+			value = uri.getQueryParameter(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return value;
 	}
 }

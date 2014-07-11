@@ -1,3 +1,11 @@
+/**
+ *
+ * Copyright (c) 2014 CoderKiss
+ *
+ * CoderKiss[AT]gmail.com
+ *
+ */
+
 package me.dawson.kisstools.utils;
 
 import java.io.File;
