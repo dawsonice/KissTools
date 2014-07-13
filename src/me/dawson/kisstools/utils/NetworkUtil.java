@@ -17,7 +17,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 
-public class NetworkHelper {
+public class NetworkUtil {
 	public static final String TAG = "NetworkHelper";
 
 	public interface NetworkListener {
@@ -39,7 +39,7 @@ public class NetworkHelper {
 		}
 	};
 
-	private NetworkHelper() {
+	private NetworkUtil() {
 		type = NetworkType.NONE;
 		updateNetwork();
 

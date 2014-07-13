@@ -212,7 +212,7 @@ public class JSONUtil {
 			} else if (value instanceof Double) {
 				bundle.putDouble(key, (Double) value);
 			} else if (value instanceof Float) {
-				bundle.putDouble(key, (Double) value);
+				bundle.putFloat(key, (Float) value);
 			} else if (value instanceof JSON) {
 				String jsonStr = ((JSON) value).toJSONString();
 				bundle.putString(key, jsonStr);

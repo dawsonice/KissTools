@@ -11,7 +11,6 @@ package me.dawson.kisstools;
 import java.lang.ref.WeakReference;
 import java.security.InvalidParameterException;
 
-import me.dawson.kisstools.utils.DeviceInfo;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.Handler;
@@ -28,10 +27,8 @@ public class KissTools {
 
 		Context appContext = context.getApplicationContext();
 		contextRef = new WeakReference<Context>(appContext);
-
-		DeviceInfo.init();
 	}
-
+	
 	public static Context getApplicationContext() {
 		Context context = contextRef.get();
 		if (context == null) {

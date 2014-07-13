@@ -17,17 +17,20 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
-public class MessageHelper {
+public class MessageUtil {
 	public static final String TAG = "Messager";
 
 	public static final String BROADCAST_PARAM = "broadcast_param";
 	public static final String REQUEST_ACTION = "request_action";
 	public static final String RESPONSE_ACTION = "response_action";
 
-	private static MessageHelper instance;
-	public static final MessageHelper sharedInstance() {
-		if (instance == null) {
-			instance = new MessageHelper();
+	private static volatile MessageUtil instance;
+
+	public static final MessageUtil sharedInstance() {
+		synchronized (MessageUtil.class) {
+			if (instance == null) {
+				instance = new MessageUtil();
+			}
 		}
 		return instance;
 	}
@@ -35,9 +38,10 @@ public class MessageHelper {
 	private LocalBroadcastManager mManager;
 	private LinkedList<BroadcastReceiver> mReceivers;
 
-	private MessageHelper() {
+	private MessageUtil() {
 		mReceivers = new LinkedList<BroadcastReceiver>();
-		mManager = LocalBroadcastManager.getInstance(KissTools.getApplicationContext());
+		mManager = LocalBroadcastManager.getInstance(KissTools
+				.getApplicationContext());
 	}
 
 	public void registerReceiver(BroadcastReceiver receiver, IntentFilter filter) {

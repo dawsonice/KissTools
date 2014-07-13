@@ -22,6 +22,32 @@ import android.util.TypedValue;
 public class DeviceUtil {
 	public static final String TAG = "DeviceUtil";
 
+	public static String getInfo() {
+		String model = android.os.Build.MODEL;
+		String device = android.os.Build.DEVICE;
+		String brand = android.os.Build.BRAND;
+		String product = android.os.Build.PRODUCT;
+		String display = android.os.Build.DISPLAY;
+		String manufacture = android.os.Build.MANUFACTURER;
+
+		Context context = KissTools.getApplicationContext();
+		Resources resources = context.getResources();
+		DisplayMetrics dm = resources.getDisplayMetrics();
+		int screenWidth = dm.widthPixels;
+		int screenHeight = dm.heightPixels;
+		float density = dm.density;
+
+		StringBuilder sb = new StringBuilder();
+		String finalInfo = sb.append("MODEL " + model)
+				.append("\nDEVICE " + device).append("\nBRAND " + brand)
+				.append("\nPRODUCT " + product).append("\nDISPLAY " + display)
+				.append("\nMANUFACTURE " + manufacture)
+				.append("\nSCREEN_WIDTH " + screenWidth)
+				.append("\nSCREEN_HEIGHT " + screenHeight)
+				.append("\nDENSITY " + density).toString();
+		return finalInfo;
+	}
+
 	public static final String getBluetoothMac() {
 		BluetoothAdapter adapter = null;
 		String bluetoothMac = null;

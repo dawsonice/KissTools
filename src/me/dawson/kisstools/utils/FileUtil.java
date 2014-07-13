@@ -69,7 +69,7 @@ public class FileUtil {
 	}
 
 	public static boolean move(String srcPath, String dstPath) {
-		return move(srcPath, dstPath);
+		return move(srcPath, dstPath, false);
 	}
 
 	public static boolean move(String srcPath, String dstPath, boolean force) {
@@ -419,6 +419,7 @@ public class FileUtil {
 			fis = new FileInputStream(file);
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
+			return null;
 		}
 		MessageDigest messageDigest;
 		try {
@@ -459,6 +460,7 @@ public class FileUtil {
 			fis = new FileInputStream(file);
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
+			return null;
 		}
 		MessageDigest messageDigest;
 		try {

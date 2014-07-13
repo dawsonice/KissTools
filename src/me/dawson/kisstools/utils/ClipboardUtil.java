@@ -6,11 +6,11 @@
  *
  */
 
-package me.dawson.kisstools.helper;
+package me.dawson.kisstools.utils;
 
 import android.content.Context;
 
-public class ClipboardHelper {
+public class ClipboardUtil {
 	public static final String TAG = "ClipboardHelper";
 
 	@SuppressWarnings("deprecation")
