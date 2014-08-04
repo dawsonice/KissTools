@@ -8,6 +8,7 @@
 
 package me.dawson.kisstools.utils;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 import android.os.Bundle;
@@ -212,7 +213,10 @@ public class JSONUtil {
 			} else if (value instanceof Double) {
 				bundle.putDouble(key, (Double) value);
 			} else if (value instanceof Float) {
-				bundle.putFloat(key, (Float) value);
+				float f = (Float) value;
+				BigDecimal bd = new BigDecimal(Float.toString(f));
+				double dd = bd.doubleValue();
+				bundle.putDouble(key, dd);
 			} else if (value instanceof JSON) {
 				String jsonStr = ((JSON) value).toJSONString();
 				bundle.putString(key, jsonStr);

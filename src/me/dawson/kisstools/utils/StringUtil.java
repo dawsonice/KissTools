@@ -8,6 +8,8 @@
 
 package me.dawson.kisstools.utils;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,5 +76,15 @@ public class StringUtil {
 		}
 
 		return true;
+	}
+
+	public static String stringify(Throwable t) {
+		if (t == null) {
+			return null;
+		}
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		t.printStackTrace(pw);
+		return sw.toString();
 	}
 }

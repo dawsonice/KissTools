@@ -170,12 +170,11 @@ public class FileUtil {
 		if (TextUtils.isEmpty(absPath)) {
 			return absPath;
 		}
-		while (absPath.contains("//")) {
-			absPath = absPath.replace("//", "/");
-		}
-		int length = absPath.length();
-		if (absPath.endsWith("/") && length > 1) {
-			absPath = absPath.substring(0, length - 1);
+		try {
+			File file = new File(absPath);
+			absPath = file.getCanonicalPath();
+		} catch (Exception e) {
+
 		}
 		return absPath;
 	}

@@ -10,9 +10,11 @@ package me.dawson.kisstools.utils;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -92,6 +94,19 @@ public class BitmapUtil {
 		options.inSampleSize = scaleH > scaleW ? scaleH : scaleW;
 		options.inJustDecodeBounds = false;
 		return options;
+	}
+
+	public static Bitmap getAssetBitmap(Context context, String filePath) {
+		AssetManager assetManager = context.getAssets();
+		InputStream ips = null;
+		Bitmap bitmap = null;
+		try {
+			ips = assetManager.open(filePath);
+			bitmap = BitmapFactory.decodeStream(ips);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return bitmap;
 	}
 
 	public static Bitmap getImage(String absPath) {

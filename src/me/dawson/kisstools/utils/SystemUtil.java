@@ -16,6 +16,8 @@ import java.io.InputStream;
 import java.util.List;
 
 import me.dawson.kisstools.KissTools;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.admin.DevicePolicyManager;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -23,6 +25,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Looper;
@@ -260,4 +263,30 @@ public class SystemUtil {
 		return debuggable;
 	}
 
+	public static String getApplicaitonDir() {
+		Context context = KissTools.getApplicationContext();
+		PackageManager packageManager = context.getPackageManager();
+		String packageName = context.getPackageName();
+		String applicationDir = null;
+		try {
+			PackageInfo p = packageManager.getPackageInfo(packageName, 0);
+			applicationDir = p.applicationInfo.dataDir;
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		return applicationDir;
+	}
+
+	public static void restartApplication(Class<?> clazz) {
+		Context context = KissTools.getApplicationContext();
+		Intent intent = new Intent(context, clazz);
+		int pendingIntentId = 198964;
+		PendingIntent pendingIntent = PendingIntent.getActivity(context,
+				pendingIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		AlarmManager am = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		am.set(AlarmManager.RTC, System.currentTimeMillis() + 500,
+				pendingIntent);
+		System.exit(0);
+	}
 }
