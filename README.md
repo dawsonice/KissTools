@@ -1,44 +1,72 @@
 
-### Kiss Tools for android
-
+## Kiss Tools for android
 
 Keep It Simple, Stupid!
 
 basic utils classes for android development.
 
-```
-`-- kisstools
-    |-- KissTools.java
-    `-- utils
-        |-- BitmapUtil.java
-        |-- BundleUtil.java
-        |-- ClipboardUtil.java
-        |-- CommonUtil.java
-        |-- DeviceUtil.java
-        |-- DrawableUtil.java
-        |-- FileUtil.java
-        |-- ImageSize.java
-        |-- JSONUtil.java
-        |-- KeyboardUtil.java
-        |-- LogUtil.java
-        |-- MediaUtil.java
-        |-- MessageUtil.java
-        |-- NetworkUtil.java
-        |-- ResourceUtil.java
-        |-- SecurityUtil.java
-        |-- StringUtil.java
-        |-- SystemUtil.java
-        |-- TimeUtil.java
-        |-- ToastUtil.java
-        |-- UrlUtil.java
-        |-- UserUtil.java
-        |-- ViewUtil.java
-        `-- ZipUtil.java
+## Usage
+
+First of all, you need to set context for KissTools
 
 ```
+KissTools.setContext(context);
+```
 
-===
+Then enjoy tools below!
+
+```
+|-- KissTools.java
+|-- data
+|   |-- KVDataBase.java
+|   |-- KVDataSet.java
+|   `-- KVPreference.java
+`-- utils
+    |-- BitmapUtil.java
+    |-- BundleUtil.java
+    |-- ClipboardUtil.java
+    |-- CommonUtil.java
+    |-- DeviceUtil.java
+    |-- DrawableUtil.java
+    |-- FileUtil.java
+    |-- ImageSize.java
+    |-- JSONUtil.java
+    |-- KeyboardUtil.java
+    |-- LogUtil.java
+    |-- MediaUtil.java
+    |-- MessageUtil.java
+    |-- NetworkUtil.java
+    |-- ResourceUtil.java
+    |-- SecurityUtil.java
+    |-- StringUtil.java
+    |-- SystemUtil.java
+    |-- TimeUtil.java
+    |-- ToastUtil.java
+    |-- UrlUtil.java
+    |-- UserUtil.java
+    |-- ViewUtil.java
+    `-- ZipUtil.java
+```
+
+## Contact me
+
 Any further question?
 
-[email](mailto:coder.kiss@gmail.com) me please!
+[Email me](mailto:coder.kiss@gmail.com) please!
 
+
+## License
+
+        Copyright 2014 Dawson Dong
+        
+        Licensed under the Apache License, Version 2.0 (the "License");
+        you may not use this file except in compliance with the License.
+        You may obtain a copy of the License at
+        
+        http://www.apache.org/licenses/LICENSE-2.0
+        
+        Unless required by applicable law or agreed to in writing, software
+        distributed under the License is distributed on an "AS IS" BASIS,
+        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        See the License for the specific language governing permissions and
+        limitations under the License.
