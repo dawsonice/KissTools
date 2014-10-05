@@ -8,6 +8,8 @@
 
 package me.dawson.kisstools.utils;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -187,10 +189,12 @@ public class BitmapUtil {
 		}
 
 		try {
-			FileOutputStream fos = new FileOutputStream(absPath);
-			bitmap.compress(Bitmap.CompressFormat.JPEG, quality, fos);
-			fos.flush();
-			fos.close();
+			File outFile = new File(absPath);
+			FileOutputStream fos = new FileOutputStream(outFile);
+			BufferedOutputStream bos = new BufferedOutputStream(fos);
+			bitmap.compress(Bitmap.CompressFormat.JPEG, quality, bos);
+			bos.flush();
+			bos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			LogUtil.e(TAG, "failed to write image content");

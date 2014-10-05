@@ -17,6 +17,7 @@ import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.WindowManager;
 
 //hardware related functions
 public class DeviceUtil {
@@ -134,5 +135,15 @@ public class DeviceUtil {
 		final float scale = context.getResources().getDisplayMetrics().scaledDensity;
 		int px = Math.round(sp * scale);
 		return px;
+	}
+
+	public static int getDensity() {
+		Context context = KissTools.getApplicationContext();
+		DisplayMetrics metrics = new DisplayMetrics();
+		WindowManager wm = (WindowManager) context
+				.getSystemService(Context.WINDOW_SERVICE);
+		wm.getDefaultDisplay().getMetrics(metrics);
+		int density = metrics.densityDpi;
+		return density;
 	}
 }

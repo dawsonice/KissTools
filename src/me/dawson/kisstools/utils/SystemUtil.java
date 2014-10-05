@@ -26,6 +26,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Looper;
@@ -64,13 +65,16 @@ public class SystemUtil {
 		return false;
 	}
 
-	public static int getStatusBarHeight() {
-		Context context = KissTools.getApplicationContext();
+	public static int getStatusBarHeight(Context context) {
 		int height = 0;
-		int resId = context.getResources().getIdentifier("status_bar_height",
-				"dimen", "android");
+		if (context == null) {
+			return height;
+		}
+		Resources resources = context.getResources();
+		int resId = resources.getIdentifier("status_bar_height", "dimen",
+				"android");
 		if (resId > 0) {
-			height = context.getResources().getDimensionPixelSize(resId);
+			height = resources.getDimensionPixelSize(resId);
 		}
 		return height;
 	}
