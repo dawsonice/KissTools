@@ -204,14 +204,44 @@ public class SystemUtil {
 	// <uses-permission android:name="android.permission.INJECT_EVENTS" />
 	public final static void inputKeyEvent(int keyCode) {
 		try {
-			// Runtime runtime = Runtime.getRuntime();
-			// runtime.exec("input keyevent " + keyCode);
 			runRootCmd("input keyevent " + keyCode);
-			// Instrumentation inst = new Instrumentation();
-			// inst.sendKeyDownUpSync(keyCode);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static String runCmd(String cmd) {
+		if (TextUtils.isEmpty(cmd)) {
+			return null;
+		}
+		Process process = null;
+		String result = null;
+
+		String[] commands = { "/system/bin/sh", "-c", cmd };
+
+		try {
+			process = Runtime.getRuntime().exec(commands);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			int read = -1;
+			InputStream errIs = process.getErrorStream();
+			while ((read = errIs.read()) != -1) {
+				baos.write(read);
+			}
+			baos.write('\n');
+
+			InputStream inIs = process.getInputStream();
+			while ((read = inIs.read()) != -1) {
+				baos.write(read);
+			}
+
+			byte[] data = baos.toByteArray();
+			result = new String(data);
+
+			LogUtil.d(TAG, "runCmd result " + result);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	private static void runRootCmd(String cmd) {
