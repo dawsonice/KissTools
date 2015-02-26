@@ -8,12 +8,15 @@
 
 package me.dawson.kisstools.utils;
 
+import android.annotation.SuppressLint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Build;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.TextView;
 
 public class ViewUtil {
@@ -63,4 +66,17 @@ public class ViewUtil {
 		int y = location[1] + view.getHeight() / 2;
 		return new Point(x, y);
 	}
+
+	@SuppressLint("NewApi")
+	public static void setAlpha(View view, float alpha) {
+		if (Build.VERSION.SDK_INT < 11) {
+			final AlphaAnimation animation = new AlphaAnimation(alpha, alpha);
+			animation.setDuration(0);
+			animation.setFillAfter(true);
+			view.startAnimation(animation);
+		} else {
+			view.setAlpha(alpha);
+		}
+	}
+
 }

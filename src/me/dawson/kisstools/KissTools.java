@@ -61,4 +61,12 @@ public class KissTools {
 			handler.post(runnable);
 		}
 	}
+
+	public static void runOnMain(Runnable runnable, long delay) {
+		if (runnable == null) {
+			return;
+		}
+		Handler handler = new Handler(Looper.getMainLooper());
+		handler.postDelayed(runnable, delay);
+	}
 }

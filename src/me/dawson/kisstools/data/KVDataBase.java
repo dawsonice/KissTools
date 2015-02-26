@@ -15,14 +15,14 @@ public class KVDataBase extends SQLiteOpenHelper implements KVDataSet {
 	public static final String TAG = "DataBase";
 
 	private static final int DB_VERSION = 1;
-	private static final String DB_NAME = "kv_data.db";
-	private static final String KV_TABLE = "key_value";
+	private static final String DEFAULT_DB_NAME = "kv_data.db";
+	private static final String DEFAULT_TABLE_NAME = "key_value";
 
 	private Context dbContext;
 	private String dbName;
 
 	public KVDataBase(Context context) {
-		this(context, DB_NAME);
+		this(context, DEFAULT_DB_NAME);
 	}
 
 	public KVDataBase(Context context, String name) {
@@ -33,7 +33,7 @@ public class KVDataBase extends SQLiteOpenHelper implements KVDataSet {
 
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("CREATE TABLE IF NOT EXISTS "
-				+ KV_TABLE
+				+ DEFAULT_TABLE_NAME
 				+ "(id INTEGER, key TEXT UNIQUE, value TEXT NOT NULL, PRIMARY KEY(id, key));");
 	}
 
@@ -46,7 +46,8 @@ public class KVDataBase extends SQLiteOpenHelper implements KVDataSet {
 			return null;
 		}
 
-		String sql = "SELECT * FROM " + KV_TABLE + " WHERE key='" + key + "'";
+		String sql = "SELECT * FROM " + DEFAULT_TABLE_NAME + " WHERE key='"
+				+ key + "'";
 		SQLiteDatabase db = getWritableDatabase();
 		Cursor cursor = db.rawQuery(sql, null);
 		String value = null;
@@ -65,7 +66,7 @@ public class KVDataBase extends SQLiteOpenHelper implements KVDataSet {
 		}
 
 		SQLiteDatabase db = getWritableDatabase();
-		db.execSQL("INSERT OR REPLACE INTO " + KV_TABLE
+		db.execSQL("INSERT OR REPLACE INTO " + DEFAULT_TABLE_NAME
 				+ "(key, value) VALUES(?, ?)", new Object[] { key, value });
 		db.close();
 		return true;
@@ -75,8 +76,8 @@ public class KVDataBase extends SQLiteOpenHelper implements KVDataSet {
 		if (TextUtils.isEmpty(key)) {
 			return false;
 		}
-		String sql = "DELETE FROM " + KV_TABLE + " WHERE key " + "='" + key
-				+ "'";
+		String sql = "DELETE FROM " + DEFAULT_TABLE_NAME + " WHERE key " + "='"
+				+ key + "'";
 		SQLiteDatabase db = getWritableDatabase();
 		db.execSQL(sql);
 		db.close();
@@ -84,7 +85,8 @@ public class KVDataBase extends SQLiteOpenHelper implements KVDataSet {
 	}
 
 	public List<String> list() {
-		String sql = "SELECT * FROM " + KV_TABLE + " ORDER BY id  ASC";
+		String sql = "SELECT * FROM " + DEFAULT_TABLE_NAME
+				+ " ORDER BY id  ASC";
 		SQLiteDatabase db = getWritableDatabase();
 		Cursor cursor = db.rawQuery(sql, null);
 		LinkedList<String> values = new LinkedList<String>();
@@ -99,7 +101,7 @@ public class KVDataBase extends SQLiteOpenHelper implements KVDataSet {
 
 	@Override
 	public boolean clear() {
-		String sql = "DELETE * FROM " + KV_TABLE;
+		String sql = "DELETE * FROM " + DEFAULT_TABLE_NAME;
 		SQLiteDatabase db = getWritableDatabase();
 		db.execSQL(sql);
 		db.close();

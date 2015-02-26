@@ -7,12 +7,14 @@
     <color name="blue">#FF0000FF</color>
     <color name="green">#FF00FF00</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="light_grey">#80F6F6F6</color>
     <color name="grey_1">#FFE3E3E3</color>
-    <color name="grey">#FFDDDDDD</color>
     <color name="grey_2">#FFCCCCCC</color>
     <color name="grey_3">#FF999999</color>
     <color name="grey_4">#FF828282</color>
     <color name="grey_5">#FF4D4D4D</color>
+    <color name="bt_background_normal">#80F6F6F6</color>
+    <color name="bt_background_pressed">#FFDDDDDD</color>
+    <color name="bt_text_pressed">#FF666666</color>
+    <color name="bt_text_normal">#FF999999</color>
 
 </resources>

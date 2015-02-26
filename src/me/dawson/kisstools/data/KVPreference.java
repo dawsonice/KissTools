@@ -8,14 +8,14 @@ import android.text.TextUtils;
 public class KVPreference implements KVDataSet {
 	public static final String TAG = "KVPreference";
 
-	private static final String KV_NAME = "kv_sp";
+	private static final String DEFAULT_NAME = "kv_sp";
 
 	private SharedPreferences sp;
 	private String spName;
 	private Context spContext;
 
 	public KVPreference(Context context) {
-		this(context, KV_NAME);
+		this(context, DEFAULT_NAME);
 	}
 
 	public KVPreference(Context context, String name) {
