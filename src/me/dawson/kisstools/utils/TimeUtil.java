@@ -19,10 +19,10 @@ import android.text.TextUtils;
 public class TimeUtil {
 	public static final String TAG = "TimeUtil";
 
-	public static final String DEFAULT_FORMAT = "MM-dd HH:mm:ss";
+	public static final String DEFAULT_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	public static final String UTC_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
-	public static long formatTime(String time, String format) {
+	public static long format(String time, String format) {
 		if (TextUtils.isEmpty(time)) {
 			return 0;
 		}
@@ -37,13 +37,19 @@ public class TimeUtil {
 		return modified;
 	}
 
-	public static String formatTime(long time, String format) {
+	public static String format(long time) {
+		SimpleDateFormat sdf = new SimpleDateFormat(DEFAULT_FORMAT);
+		Date date = new Date(time);
+		return sdf.format(date);
+	}
+
+	public static String format(long time, String format) {
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
 		Date date = new Date(time);
 		return sdf.format(date);
 	}
 
-	public static String formatTime(Date date, String format) {
+	public static String format(Date date, String format) {
 		if (TextUtils.isEmpty(format) || date == null) {
 			return null;
 		}
@@ -51,10 +57,10 @@ public class TimeUtil {
 		return sdf.format(date);
 	}
 
-	public static String formatTime(String timeStr, String srcFormat,
+	public static String format(String timeStr, String srcFormat,
 			String dstFormat) {
-		long time = formatTime(timeStr, srcFormat);
-		String result = formatTime(time, dstFormat);
+		long time = format(timeStr, srcFormat);
+		String result = format(time, dstFormat);
 		return result;
 	}
 

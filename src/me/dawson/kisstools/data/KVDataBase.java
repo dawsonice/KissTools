@@ -12,11 +12,11 @@ import android.text.TextUtils;
 
 public class KVDataBase extends SQLiteOpenHelper implements KVDataSet {
 
-	public static final String TAG = "DataBase";
+	public static final String TAG = "KVDataBase";
 
-	private static final int DB_VERSION = 1;
-	private static final String DEFAULT_DB_NAME = "kv_data.db";
-	private static final String DEFAULT_TABLE_NAME = "key_value";
+	public static final int DB_VERSION = 1;
+	public static final String DEFAULT_DB_NAME = "kv_data.db";
+	public static final String DEFAULT_TABLE_NAME = "key_value";
 
 	private Context dbContext;
 	private String dbName;

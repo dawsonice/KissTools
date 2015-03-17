@@ -8,9 +8,7 @@
 
 package me.dawson.kisstools.utils;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -49,22 +47,6 @@ public class CommonUtil {
 		String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
 				extension);
 		return mimeType;
-	}
-
-	public static void startActivity(Context context, Intent intent) {
-		if (context == null || intent == null) {
-			return;
-		}
-
-		if (!(context instanceof Activity)) {
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		}
-
-		try {
-			context.startActivity(intent);
-		} catch (Exception e) {
-
-		}
 	}
 
 	public static int getUid(Context context) {

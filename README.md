@@ -16,36 +16,48 @@ KissTools.setContext(context);
 Then enjoy tools below!
 
 ```
-|-- KissTools.java
-|-- data
-|   |-- KVDataBase.java
-|   |-- KVDataSet.java
-|   `-- KVPreference.java
-`-- utils
-    |-- BitmapUtil.java
-    |-- BundleUtil.java
-    |-- ClipboardUtil.java
-    |-- CommonUtil.java
-    |-- DeviceUtil.java
-    |-- DrawableUtil.java
-    |-- FileUtil.java
-    |-- ImageSize.java
-    |-- JSONUtil.java
-    |-- KeyboardUtil.java
-    |-- LogUtil.java
-    |-- MediaUtil.java
-    |-- MessageUtil.java
-    |-- NetworkUtil.java
-    |-- ResourceUtil.java
-    |-- SecurityUtil.java
-    |-- StringUtil.java
-    |-- SystemUtil.java
-    |-- TimeUtil.java
-    |-- ToastUtil.java
-    |-- UrlUtil.java
-    |-- UserUtil.java
-    |-- ViewUtil.java
-    `-- ZipUtil.java
+|── KissEnv.java
+├── KissTools.java
+├── builder
+│   └── RichTextBuilder.java
+├── data
+│   ├── KVDataBase.java
+│   ├── KVDataSet.java
+│   └── KVPreference.java
+├── formatter
+│   └── DiskFormatter.java
+├── shell
+│   ├── ShellResult.java
+│   └── ShellUtil.java
+└── utils
+    ├── ActivityUtil.java
+    ├── BitmapUtil.java
+    ├── BundleUtil.java
+    ├── ClipboardUtil.java
+    ├── CommonUtil.java
+    ├── DeviceUtil.java
+    ├── DrawableUtil.java
+    ├── FileUtil.java
+    ├── ImageSize.java
+    ├── JSONUtil.java
+    ├── KeyboardUtil.java
+    ├── LogUtil.java
+    ├── MediaUtil.java
+    ├── MessageUtil.java
+    ├── NetworkUtil.java
+    ├── NumberUtil.java
+    ├── PackageUtil.java
+    ├── ResourceUtil.java
+    ├── SecurityUtil.java
+    ├── StringUtil.java
+    ├── SystemUtil.java
+    ├── TimeUtil.java
+    ├── ToastUtil.java
+    ├── UrlUtil.java
+    ├── UserUtil.java
+    ├── VerifyUtil.java
+    ├── ViewUtil.java
+    └── ZipUtil.java
 ```
 
 ## Contact me

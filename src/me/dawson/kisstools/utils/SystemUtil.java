@@ -9,13 +9,15 @@
 package me.dawson.kisstools.utils;
 
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import me.dawson.kisstools.KissTools;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.admin.DevicePolicyManager;
@@ -25,10 +27,11 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Looper;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -36,12 +39,45 @@ import android.view.MotionEvent;
 
 public class SystemUtil {
 	public static final String TAG = "SystemUtil";
+	private static final String BOOT_START_PERMISSION = "android.permission.RECEIVE_BOOT_COMPLETED";
 
 	public static final int MAX_BRIGHTNESS = 255;
 	public static final int MIN_BRIGHTNESS = 0;
 
-	public final static boolean isMainThread() {
+	public static final boolean isMainThread() {
 		return Looper.getMainLooper() == Looper.myLooper();
+	}
+
+	public static int getStatusBarHeight(Context context) {
+		int height = 0;
+		if (context == null) {
+			return height;
+		}
+		Resources resources = context.getResources();
+		int resId = resources.getIdentifier("status_bar_height", "dimen",
+				"android");
+		if (resId > 0) {
+			height = resources.getDimensionPixelSize(resId);
+		}
+		return height;
+	}
+
+	public static final String getVersion() {
+		String version = Build.VERSION.RELEASE;
+		Field[] fields = Build.VERSION_CODES.class.getFields();
+		for (Field field : fields) {
+			String fieldName = field.getName();
+			int fieldValue = -1;
+			try {
+				fieldValue = field.getInt(new Object());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if (fieldValue == Build.VERSION.SDK_INT) {
+				version = version + " : " + fieldName + " : " + fieldValue;
+			}
+		}
+		return version;
 	}
 
 	public static boolean installedApp(String packageName) {
@@ -65,20 +101,6 @@ public class SystemUtil {
 		return false;
 	}
 
-	public static int getStatusBarHeight(Context context) {
-		int height = 0;
-		if (context == null) {
-			return height;
-		}
-		Resources resources = context.getResources();
-		int resId = resources.getIdentifier("status_bar_height", "dimen",
-				"android");
-		if (resId > 0) {
-			height = resources.getDimensionPixelSize(resId);
-		}
-		return height;
-	}
-
 	public static void uninstallApp(String packageName) {
 		Context context = KissTools.getApplicationContext();
 		boolean installed = installedApp(packageName);
@@ -98,7 +120,7 @@ public class SystemUtil {
 		}
 	}
 
-	public static int getSysScreenBrightness() {
+	public static int getBrightness() {
 		Context context = KissTools.getApplicationContext();
 		int screenBrightness = 255;
 		try {
@@ -111,7 +133,7 @@ public class SystemUtil {
 		return screenBrightness;
 	}
 
-	public static void setSysScreenBrightness(int brightness) {
+	public static void setBrightness(int brightness) {
 		Context context = KissTools.getApplicationContext();
 		try {
 			if (brightness < MIN_BRIGHTNESS) {
@@ -194,6 +216,20 @@ public class SystemUtil {
 		return rooted;
 	}
 
+	public static boolean isSimulator() {
+		return (Build.FINGERPRINT != null && Build.FINGERPRINT
+				.contains("generic"))
+				|| "google_sdk".equals(Build.PRODUCT)
+				|| "google_sdk".equals(Build.MODEL)
+				|| "goldfish".equals(Build.HARDWARE);
+	}
+
+	public static boolean hasPermission(String permission) {
+		Context context = KissTools.getApplicationContext();
+		int result = context.checkCallingOrSelfPermission(permission);
+		return (result == PackageManager.PERMISSION_GRANTED);
+	}
+
 	public static void lockScreen() {
 		Context context = KissTools.getApplicationContext();
 		DevicePolicyManager deviceManager = (DevicePolicyManager) context
@@ -244,17 +280,17 @@ public class SystemUtil {
 		return result;
 	}
 
-	private static void runRootCmd(String cmd) {
+	public static String runRootCmd(String cmd) {
 		if (TextUtils.isEmpty(cmd)) {
-			return;
+			return null;
 		}
-		Process process;
+
+		Process process = null;
+		String result = null;
+
 		try {
-			process = Runtime.getRuntime().exec("su");
-			DataOutputStream os = new DataOutputStream(
-					process.getOutputStream());
-			os.writeBytes(cmd + " ;\n");
-			os.flush();
+			String[] commands = { "su", "-c", cmd };
+			process = Runtime.getRuntime().exec(commands);
 
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			int read = -1;
@@ -270,12 +306,13 @@ public class SystemUtil {
 			}
 
 			byte[] data = baos.toByteArray();
-			String result = new String(data);
+			result = new String(data);
 
 			LogUtil.d(TAG, "runRootCmd result " + result);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return result;
 	}
 
 	public static int getDistance(MotionEvent e1, MotionEvent e2) {
@@ -299,16 +336,33 @@ public class SystemUtil {
 
 	public static String getApplicaitonDir() {
 		Context context = KissTools.getApplicationContext();
-		PackageManager packageManager = context.getPackageManager();
 		String packageName = context.getPackageName();
 		String applicationDir = null;
-		try {
-			PackageInfo p = packageManager.getPackageInfo(packageName, 0);
-			applicationDir = p.applicationInfo.dataDir;
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
+		PackageInfo pi = getPackageInfo(packageName);
+		if (pi != null) {
+			applicationDir = pi.applicationInfo.dataDir;
 		}
 		return applicationDir;
+	}
+
+	public static PackageInfo getPackageInfo(String packageName) {
+		PackageInfo packageInfo = null;
+		Context context = KissTools.getApplicationContext();
+		PackageManager packageManager = context.getPackageManager();
+		try {
+			int flags = PackageManager.GET_ACTIVITIES | PackageManager.GET_GIDS
+					| PackageManager.GET_CONFIGURATIONS
+					| PackageManager.GET_INSTRUMENTATION
+					| PackageManager.GET_PERMISSIONS
+					| PackageManager.GET_PROVIDERS
+					| PackageManager.GET_RECEIVERS
+					| PackageManager.GET_SERVICES
+					| PackageManager.GET_SIGNATURES
+					| PackageManager.GET_UNINSTALLED_PACKAGES;
+			packageInfo = packageManager.getPackageInfo(packageName, flags);
+		} catch (Exception ignore) {
+		}
+		return packageInfo;
 	}
 
 	public static void restartApplication(Class<?> clazz) {
@@ -322,5 +376,42 @@ public class SystemUtil {
 		am.set(AlarmManager.RTC, System.currentTimeMillis() + 500,
 				pendingIntent);
 		System.exit(0);
+	}
+
+	public static void killApplication(String packageName) {
+		try {
+			Context context = KissTools.getApplicationContext();
+			ActivityManager activityManager = (ActivityManager) context
+					.getSystemService(Context.ACTIVITY_SERVICE);
+			activityManager.killBackgroundProcesses(packageName);
+			Method forceStopPackage = activityManager.getClass()
+					.getDeclaredMethod("forceStopPackage", String.class);
+			forceStopPackage.setAccessible(true);
+			forceStopPackage.invoke(activityManager, packageName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static boolean isBootStart(String packageName) {
+		Context context = KissTools.getApplicationContext();
+		PackageManager pm = context.getPackageManager();
+		int flag = pm.checkPermission(BOOT_START_PERMISSION, packageName);
+		return (flag == PackageManager.PERMISSION_GRANTED);
+	}
+
+	public static boolean isAutoStart(String packageName) {
+		Context context = KissTools.getApplicationContext();
+		PackageManager pm = context.getPackageManager();
+		Intent intent = new Intent(Intent.ACTION_BOOT_COMPLETED);
+		List<ResolveInfo> resolveInfoList = pm.queryBroadcastReceivers(intent,
+				PackageManager.GET_DISABLED_COMPONENTS);
+		for (ResolveInfo ri : resolveInfoList) {
+			String pn = ri.loadLabel(pm).toString();
+			if (packageName.equals(pn)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

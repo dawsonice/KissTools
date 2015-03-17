@@ -4,9 +4,13 @@
 
 package me.dawson.kisstools.utils;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 
 public class ActivityUtil {
 
@@ -17,6 +21,14 @@ public class ActivityUtil {
 		intent.setAction(Intent.ACTION_PICK);
 		Intent chooser = Intent.createChooser(intent, title);
 		startActivityForResult(activity, chooser, requestCode);
+	}
+
+	public static boolean startActivity(Context context, Class<?> clazz) {
+		if (context == null || clazz == null) {
+			return false;
+		}
+		Intent intent = new Intent(context, clazz);
+		return startActivity(context, intent);
 	}
 
 	public static boolean startActivity(Context context, Intent intent) {
@@ -51,5 +63,12 @@ public class ActivityUtil {
 			return false;
 		}
 		return true;
+	}
+
+	public static boolean isIntentResolved(Context context, Intent intent) {
+		PackageManager packageManager = context.getPackageManager();
+		List<ResolveInfo> activities = packageManager.queryIntentActivities(
+				intent, 0);
+		return (activities != null && activities.size() > 0);
 	}
 }

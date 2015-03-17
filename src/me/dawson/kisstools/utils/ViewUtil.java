@@ -16,6 +16,8 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.animation.AlphaAnimation;
 import android.widget.TextView;
 
@@ -76,6 +78,17 @@ public class ViewUtil {
 			view.startAnimation(animation);
 		} else {
 			view.setAlpha(alpha);
+		}
+	}
+
+	public static void removeFromParent(View view) {
+		if (view == null) {
+			return;
+		}
+
+		ViewParent parent = view.getParent();
+		if (parent instanceof ViewGroup) {
+			((ViewGroup) parent).removeView(view);
 		}
 	}
 
