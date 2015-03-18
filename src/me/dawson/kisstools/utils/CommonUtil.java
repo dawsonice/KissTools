@@ -19,16 +19,6 @@ import android.webkit.MimeTypeMap;
 public class CommonUtil {
 	public static final String TAG = "CommonUtil";
 
-	public static long valueOfLong(String text) {
-		long value = -1;
-		try {
-			value = Long.valueOf(text);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return value;
-	}
-
 	public static void showIME(Context context) {
 		InputMethodManager imm = (InputMethodManager) context
 				.getSystemService(Context.INPUT_METHOD_SERVICE);

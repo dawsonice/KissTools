@@ -98,8 +98,4 @@ public class MessageUtil {
 		}
 		mManager.sendBroadcast(intent);
 	}
-
-	public void debug() {
-
-	}
 }

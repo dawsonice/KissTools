@@ -37,36 +37,4 @@ public class KissTools {
 			return context;
 		}
 	}
-
-	public static boolean isDebugable() {
-		try {
-			ApplicationInfo info = getApplicationContext().getApplicationInfo();
-			return (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	public static void runOnMain(Runnable runnable) {
-		if (runnable == null) {
-			return;
-		}
-
-		boolean isMain = Looper.getMainLooper() == Looper.myLooper();
-		if (isMain) {
-			runnable.run();
-		} else {
-			Handler handler = new Handler(Looper.getMainLooper());
-			handler.post(runnable);
-		}
-	}
-
-	public static void runOnMain(Runnable runnable, long delay) {
-		if (runnable == null) {
-			return;
-		}
-		Handler handler = new Handler(Looper.getMainLooper());
-		handler.postDelayed(runnable, delay);
-	}
 }

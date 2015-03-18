@@ -24,14 +24,13 @@ import android.app.admin.DevicePolicyManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -39,14 +38,8 @@ import android.view.MotionEvent;
 
 public class SystemUtil {
 	public static final String TAG = "SystemUtil";
-	private static final String BOOT_START_PERMISSION = "android.permission.RECEIVE_BOOT_COMPLETED";
-
 	public static final int MAX_BRIGHTNESS = 255;
 	public static final int MIN_BRIGHTNESS = 0;
-
-	public static final boolean isMainThread() {
-		return Looper.getMainLooper() == Looper.myLooper();
-	}
 
 	public static int getStatusBarHeight(Context context) {
 		int height = 0;
@@ -113,7 +106,7 @@ public class SystemUtil {
 		if (isRooted) {
 			runRootCmd("pm uninstall " + packageName);
 		} else {
-			Uri uri = Uri.parse("package:" + packageName);
+			Uri uri = UrlUtil.parse("package:" + packageName);
 			Intent intent = new Intent(Intent.ACTION_DELETE, uri);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			context.startActivity(intent);
@@ -328,43 +321,6 @@ public class SystemUtil {
 		return maxMemory;
 	}
 
-	public static boolean isDebuggable() {
-		Context context = KissTools.getApplicationContext();
-		boolean debuggable = ((context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0);
-		return debuggable;
-	}
-
-	public static String getApplicaitonDir() {
-		Context context = KissTools.getApplicationContext();
-		String packageName = context.getPackageName();
-		String applicationDir = null;
-		PackageInfo pi = getPackageInfo(packageName);
-		if (pi != null) {
-			applicationDir = pi.applicationInfo.dataDir;
-		}
-		return applicationDir;
-	}
-
-	public static PackageInfo getPackageInfo(String packageName) {
-		PackageInfo packageInfo = null;
-		Context context = KissTools.getApplicationContext();
-		PackageManager packageManager = context.getPackageManager();
-		try {
-			int flags = PackageManager.GET_ACTIVITIES | PackageManager.GET_GIDS
-					| PackageManager.GET_CONFIGURATIONS
-					| PackageManager.GET_INSTRUMENTATION
-					| PackageManager.GET_PERMISSIONS
-					| PackageManager.GET_PROVIDERS
-					| PackageManager.GET_RECEIVERS
-					| PackageManager.GET_SERVICES
-					| PackageManager.GET_SIGNATURES
-					| PackageManager.GET_UNINSTALLED_PACKAGES;
-			packageInfo = packageManager.getPackageInfo(packageName, flags);
-		} catch (Exception ignore) {
-		}
-		return packageInfo;
-	}
-
 	public static void restartApplication(Class<?> clazz) {
 		Context context = KissTools.getApplicationContext();
 		Intent intent = new Intent(context, clazz);
@@ -393,25 +349,28 @@ public class SystemUtil {
 		}
 	}
 
-	public static boolean isBootStart(String packageName) {
-		Context context = KissTools.getApplicationContext();
-		PackageManager pm = context.getPackageManager();
-		int flag = pm.checkPermission(BOOT_START_PERMISSION, packageName);
-		return (flag == PackageManager.PERMISSION_GRANTED);
+	public static final boolean isMainThread() {
+		return Looper.getMainLooper() == Looper.myLooper();
 	}
 
-	public static boolean isAutoStart(String packageName) {
-		Context context = KissTools.getApplicationContext();
-		PackageManager pm = context.getPackageManager();
-		Intent intent = new Intent(Intent.ACTION_BOOT_COMPLETED);
-		List<ResolveInfo> resolveInfoList = pm.queryBroadcastReceivers(intent,
-				PackageManager.GET_DISABLED_COMPONENTS);
-		for (ResolveInfo ri : resolveInfoList) {
-			String pn = ri.loadLabel(pm).toString();
-			if (packageName.equals(pn)) {
-				return true;
-			}
+	public static void runOnMain(Runnable runnable) {
+		if (runnable == null) {
+			return;
 		}
-		return false;
+
+		if (isMainThread()) {
+			runnable.run();
+		} else {
+			Handler handler = new Handler(Looper.getMainLooper());
+			handler.post(runnable);
+		}
+	}
+
+	public static void runOnMain(Runnable runnable, long delay) {
+		if (runnable == null) {
+			return;
+		}
+		Handler handler = new Handler(Looper.getMainLooper());
+		handler.postDelayed(runnable, delay);
 	}
 }

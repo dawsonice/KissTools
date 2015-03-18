@@ -16,7 +16,7 @@ import android.text.TextUtils;
 public class UrlUtil {
 	public static final String TAG = "UrlUtil";
 
-	public static String encodeURL(String url) {
+	public static String encode(String url) {
 		if (TextUtils.isEmpty(url)) {
 			return url;
 		}
@@ -40,7 +40,7 @@ public class UrlUtil {
 		return encodedURL;
 	}
 
-	public static Uri parseUrl(String url) {
+	public static Uri parse(String url) {
 		if (TextUtils.isEmpty(url)) {
 			return null;
 		}
@@ -55,7 +55,7 @@ public class UrlUtil {
 	}
 
 	public static String getParam(String url, String key) {
-		Uri uri = parseUrl(url);
+		Uri uri = parse(url);
 		if (uri == null) {
 			return null;
 		}

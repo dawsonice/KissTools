@@ -13,6 +13,7 @@ import java.util.List;
 
 import me.dawson.kisstools.KissEnv;
 import me.dawson.kisstools.utils.LogUtil;
+import me.dawson.kisstools.utils.NumberUtil;
 
 public class ShellUtil {
 	public static final String TAG = "ShellTool";
@@ -85,7 +86,7 @@ public class ShellUtil {
 			}
 			String[] fields = line.split(" ");
 			if (fields != null && fields.length >= 2 && fields[1] != null) {
-				resultCode = Integer.parseInt(fields[1]);
+				resultCode = NumberUtil.parse(fields[1], resultCode);
 			}
 			successMsg = successBuilder.toString();
 
