@@ -13,6 +13,8 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import me.dawson.kisstools.KissTools;
+import me.dawson.kisstools.shell.ShellResult;
+import me.dawson.kisstools.shell.ShellUtil;
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -271,5 +273,24 @@ public class DeviceUtil {
 		} catch (IOException e) {
 			return -1;
 		}
+	}
+
+	public static final boolean screenCap(String localPath) {
+		if (FileUtil.exists(localPath)) {
+			FileUtil.delete(localPath);
+		}
+
+		if (!FileUtil.create(localPath)) {
+			return false;
+		}
+
+		ShellUtil shell = new ShellUtil();
+		// failed to run 'su' command
+		if (shell.prepare(true)) {
+			return false;
+		}
+		String command = "screencap -p '" + localPath + ",";
+		ShellResult result = shell.execute(command);
+		return (result != null && result.success());
 	}
 }

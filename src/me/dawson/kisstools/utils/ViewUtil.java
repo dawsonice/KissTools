@@ -9,6 +9,7 @@
 package me.dawson.kisstools.utils;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Build;
@@ -92,4 +93,17 @@ public class ViewUtil {
 		}
 	}
 
+	public static Bitmap capture(View view) {
+		if (view == null) {
+			return null;
+		}
+		boolean oldEnabled = view.isDrawingCacheEnabled();
+		view.setDrawingCacheEnabled(true);
+		view.buildDrawingCache();
+		Bitmap bitmap = view.getDrawingCache();
+		if (!oldEnabled) {
+			view.setDrawingCacheEnabled(false);
+		}
+		return bitmap;
+	}
 }

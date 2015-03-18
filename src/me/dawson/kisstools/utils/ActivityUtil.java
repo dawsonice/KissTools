@@ -11,6 +11,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.view.View;
 
 public class ActivityUtil {
 
@@ -70,5 +72,13 @@ public class ActivityUtil {
 		List<ResolveInfo> activities = packageManager.queryIntentActivities(
 				intent, 0);
 		return (activities != null && activities.size() > 0);
+	}
+
+	public static Bitmap captureActivity(Activity activity) {
+		if (activity == null) {
+			return null;
+		}
+		View view = activity.getWindow().getDecorView().getRootView();
+		return ViewUtil.capture(view);
 	}
 }
