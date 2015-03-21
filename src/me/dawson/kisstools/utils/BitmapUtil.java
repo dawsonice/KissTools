@@ -532,17 +532,16 @@ public class BitmapUtil {
 		return shadowImage32;
 	}
 
-	public static Bitmap blur(Bitmap bmp) {
+	public static Bitmap blur(Bitmap origin, int radius) {
 		int iterations = 1;
-		int radius = 8;
-		int width = bmp.getWidth();
-		int height = bmp.getHeight();
+		int width = origin.getWidth();
+		int height = origin.getHeight();
 		int[] inPixels = new int[width * height];
 		int[] outPixels = new int[width * height];
 		Bitmap bitmap = Bitmap.createBitmap(width, height,
 				Bitmap.Config.ARGB_8888);
-		bmp.getPixels(inPixels, 0, width, 0, 0, width, height);
-		for (int i = 0; i < iterations; i++) {
+		origin.getPixels(inPixels, 0, width, 0, 0, width, height);
+		for (int index = 0; index < iterations; index++) {
 			blur(inPixels, outPixels, width, height, radius);
 			blur(outPixels, inPixels, height, width, radius);
 		}

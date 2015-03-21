@@ -136,10 +136,7 @@ public class FileUtil {
 	}
 
 	public static boolean exists(File file) {
-		if (file == null) {
-			return false;
-		}
-		return file.exists();
+		return file == null ? false : file.exists();
 	}
 
 	public static boolean childOf(String childPath, String parentPath) {
@@ -287,11 +284,7 @@ public class FileUtil {
 	}
 
 	public final static boolean isFile(File file) {
-		if (file == null) {
-			return false;
-		}
-
-		return file.isFile();
+		return file == null ? false : file.isFile();
 	}
 
 	public final static boolean isFolder(String absPath) {
@@ -305,11 +298,7 @@ public class FileUtil {
 	}
 
 	public final static String getName(File file) {
-		if (file == null) {
-			return null;
-		} else {
-			return getName(file.getAbsolutePath());
-		}
+		return file == null ? null : getName(file.getAbsolutePath());
 	}
 
 	public final static String getName(String absPath) {
@@ -326,11 +315,7 @@ public class FileUtil {
 	}
 
 	public final static String getParent(File file) {
-		if (file == null) {
-			return null;
-		} else {
-			return file.getParent();
-		}
+		return file == null ? null : file.getParent();
 	}
 
 	public final static String getParent(String absPath) {
@@ -343,10 +328,7 @@ public class FileUtil {
 	}
 
 	public static String getStem(File file) {
-		if (file == null) {
-			return null;
-		}
-		return getStem(file.getName());
+		return file == null ? null : getStem(file.getName());
 	}
 
 	public final static String getStem(String fileName) {
@@ -363,10 +345,7 @@ public class FileUtil {
 	}
 
 	public static String getExtension(File file) {
-		if (file == null) {
-			return null;
-		}
-		return getExtension(file.getName());
+		return file == null ? null : getExtension(file.getName());
 	}
 
 	public static String getExtension(String fileName) {
