@@ -13,6 +13,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.MessageDigest;
 
 import android.text.TextUtils;
@@ -250,24 +252,33 @@ public class FileUtil {
 			e.printStackTrace();
 			return false;
 		}
+		return copy(in, out);
+	}
+
+	public static boolean copy(InputStream is, OutputStream os) {
+		if (is == null || os == null) {
+			return false;
+		}
 
 		try {
 			byte[] buffer = new byte[IO_BUFFER_SIZE];
-
-			int len;
-			while ((len = in.read(buffer)) != -1) {
-				out.write(buffer, 0, len);
+			int length;
+			while ((length = is.read(buffer)) != -1) {
+				os.write(buffer, 0, length);
 			}
-			out.flush();
+			os.flush();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		} finally {
 			try {
-				in.close();
-				out.close();
-			} catch (Exception e) {
-				e.printStackTrace();
+				is.close();
+			} catch (Exception ignore) {
+			}
+			try {
+				os.close();
+			} catch (Exception ignore) {
+
 			}
 		}
 		return true;
@@ -297,6 +308,27 @@ public class FileUtil {
 		return file.isDirectory();
 	}
 
+	public static boolean isSymlink(File file) {
+		if (file == null) {
+			return false;
+		}
+
+		boolean isSymlink = false;
+		try {
+			File canon = null;
+			if (file.getParent() == null) {
+				canon = file;
+			} else {
+				File canonDir = file.getParentFile().getCanonicalFile();
+				canon = new File(canonDir, file.getName());
+			}
+			isSymlink = !canon.getCanonicalFile().equals(
+					canon.getAbsoluteFile());
+		} catch (Exception e) {
+		}
+		return isSymlink;
+	}
+
 	public final static String getName(File file) {
 		return file == null ? null : getName(file.getAbsolutePath());
 	}
@@ -308,7 +340,7 @@ public class FileUtil {
 
 		String fileName = null;
 		int index = absPath.lastIndexOf("/");
-		if (index > 0 && index < (absPath.length() - 1)) {
+		if (index >= 0 && index < (absPath.length() - 1)) {
 			fileName = absPath.substring(index + 1, absPath.length());
 		}
 		return fileName;

@@ -103,7 +103,7 @@ public class SystemUtil {
 		Context context = KissTools.getApplicationContext();
 		boolean installed = installedApp(packageName);
 		if (!installed) {
-			ToastUtil.showToast("package_not_installed");
+			ToastUtil.show("package_not_installed");
 			return;
 		}
 

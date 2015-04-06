@@ -16,7 +16,7 @@ import com.kisstools.utils.LogUtil;
 import com.kisstools.utils.NumberUtil;
 
 public class ShellUtil {
-	public static final String TAG = "ShellTool";
+	public static final String TAG = "ShellUtil";
 
 	private static final String COMMAND_SU = "su";
 	private static final String COMMAND_SH = "sh";

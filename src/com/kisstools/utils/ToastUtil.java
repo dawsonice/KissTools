@@ -30,7 +30,7 @@ public class ToastUtil {
 		mToast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
 	}
 
-	public static void showToast(int resId) {
+	public static void show(int resId) {
 		initToast();
 		if (resId < 0 || mToast == null) {
 			return;
@@ -40,7 +40,7 @@ public class ToastUtil {
 		mToast.show();
 	}
 
-	public static void showToast(String message) {
+	public static void show(String message) {
 		initToast();
 		if (TextUtils.isEmpty(message) || mToast == null) {
 			return;
@@ -50,7 +50,7 @@ public class ToastUtil {
 		mToast.show();
 	}
 
-	public static void dismissToast() {
+	public static void dismiss() {
 		if (mToast == null) {
 			return;
 		}
