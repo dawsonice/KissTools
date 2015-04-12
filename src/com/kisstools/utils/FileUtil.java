@@ -15,7 +15,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.security.MessageDigest;
+
+import org.apache.http.util.ByteArrayBuffer;
 
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
@@ -495,5 +498,48 @@ public class FileUtil {
 			fileMD5 = fileMD5.trim();
 		}
 		return fileMD5;
+	}
+
+	public static final boolean write(String absPath, String text) {
+		if (!create(absPath, true)) {
+			return false;
+		}
+
+		FileOutputStream fos = null;
+		PrintWriter pw = null;
+		try {
+			fos = new FileOutputStream(absPath);
+			pw = new PrintWriter(fos);
+			pw.write(text);
+			pw.flush();
+		} catch (Exception e) {
+
+		} finally {
+			CloseUtil.close(pw);
+			CloseUtil.close(fos);
+		}
+
+		return true;
+	}
+
+	public static final String read(String absPath) {
+		String text = null;
+		InputStream ips = null;
+		try {
+			ips = new FileInputStream(absPath);
+			ByteArrayBuffer baf = new ByteArrayBuffer(1024);
+			byte buffer[] = new byte[1024];
+			int index = ips.read(buffer);
+			for (; index != -1;) {
+				baf.append(buffer, 0, index);
+				index = ips.read(buffer);
+			}
+			text = new String(baf.toByteArray());
+		} catch (Exception e) {
+
+		} finally {
+			CloseUtil.close(ips);
+		}
+		return text;
 	}
 }

@@ -179,10 +179,10 @@ public class BitmapUtil {
 	}
 
 	public static boolean saveImage(Bitmap bitmap, String absPath) {
-		return saveBitmap(bitmap, absPath, 100);
+		return saveImage(bitmap, absPath, 100);
 	}
 
-	public static boolean saveBitmap(Bitmap bitmap, String absPath, int quality) {
+	public static boolean saveImage(Bitmap bitmap, String absPath, int quality) {
 		if (!FileUtil.create(absPath)) {
 			LogUtil.w(TAG, "create file failed.");
 			return false;

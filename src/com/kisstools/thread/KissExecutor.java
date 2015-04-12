@@ -17,11 +17,22 @@ public class KissExecutor {
 	public static final String TAG = "KissExecutor";
 
 	public static Executor createExecutor(int poolSize, int priority) {
+		priority = buildPriority(priority);
 		BlockingQueue<Runnable> taskQueue = new LinkedBlockingQueue<Runnable>();
 		ThreadFactory threadFactory = new DefaultThreadFactory(priority,
 				"kiss-executor-");
 		return new ThreadPoolExecutor(poolSize, poolSize, 0L,
 				TimeUnit.MILLISECONDS, taskQueue, threadFactory);
+	}
+
+	private static int buildPriority(int priority) {
+		if (priority < Thread.MIN_PRIORITY) {
+			return Thread.MIN_PRIORITY;
+		} else if (priority > Thread.MAX_PRIORITY) {
+			return Thread.MAX_PRIORITY;
+		} else {
+			return priority;
+		}
 	}
 
 	private static class DefaultThreadFactory implements ThreadFactory {

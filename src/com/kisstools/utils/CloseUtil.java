@@ -11,7 +11,7 @@ import java.net.Socket;
 
 public class CloseUtil {
 
-	public static final void safeClose(Closeable closeable) {
+	public static final void close(Closeable closeable) {
 		if (closeable != null) {
 			try {
 				closeable.close();
@@ -21,7 +21,7 @@ public class CloseUtil {
 		}
 	}
 
-	public static final void safeClose(Socket closeable) {
+	public static final void close(Socket closeable) {
 		if (closeable != null) {
 			try {
 				closeable.close();
@@ -31,7 +31,7 @@ public class CloseUtil {
 		}
 	}
 
-	public static final void safeClose(ServerSocket closeable) {
+	public static final void close(ServerSocket closeable) {
 		if (closeable != null) {
 			try {
 				closeable.close();

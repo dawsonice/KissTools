@@ -8,6 +8,8 @@
 
 package com.kisstools.utils;
 
+import java.lang.reflect.Method;
+
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -105,5 +107,30 @@ public class ViewUtil {
 			view.setDrawingCacheEnabled(false);
 		}
 		return bitmap;
+	}
+
+	public static void toggleSoftInput(TextView tv, boolean enable) {
+		Method setShowSoftInputOnFocus = null;
+		try {
+			Method[] methods = tv.getClass().getMethods();
+			for (Method m : methods) {
+				String name = m.getName();
+				if (name.equals("setSoftInputShownOnFocus")) {
+					setShowSoftInputOnFocus = tv.getClass().getMethod(
+							"setSoftInputShownOnFocus", boolean.class);
+					break;
+				} else if (name.equals("setShowSoftInputOnFocus")) {
+					setShowSoftInputOnFocus = tv.getClass().getMethod(
+							"setShowSoftInputOnFocus", boolean.class);
+					break;
+				}
+			}
+			if (null != setShowSoftInputOnFocus) {
+				setShowSoftInputOnFocus.setAccessible(true);
+				setShowSoftInputOnFocus.invoke(tv, enable);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

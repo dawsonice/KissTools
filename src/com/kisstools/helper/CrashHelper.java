@@ -12,16 +12,17 @@ import android.app.Application;
 import android.os.Build;
 import android.os.Looper;
 
+import com.kisstools.utils.FileUtil;
 import com.kisstools.utils.LogUtil;
+import com.kisstools.utils.MediaUtil;
 import com.kisstools.utils.StringUtil;
+import com.kisstools.utils.TimeUtil;
 import com.kisstools.utils.ToastUtil;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class CrashHelper implements UncaughtExceptionHandler {
 
 	public static final String TAG = "CrashHelper";
-
-	private boolean enableToast;
 
 	@SuppressLint("NewApi")
 	public static final void init(Application application) {
@@ -37,26 +38,28 @@ public class CrashHelper implements UncaughtExceptionHandler {
 	public void uncaughtException(Thread thread, Throwable ex) {
 		final String name = thread.getName();
 
-		if (enableToast) {
-			String message = "exception in " + name;
-			showToast(message);
-		}
+		String crashMessage = StringUtil.stringify(ex);
+		StringBuilder builder = new StringBuilder();
+		builder.append("crash in thread " + name);
+		builder.append("crash detail message:\n");
+		builder.append(crashMessage);
 
-		String text = StringUtil.stringify(ex);
-		LogUtil.e(TAG, "thread " + name + " exception");
-		LogUtil.d(TAG, "exception detail\n" + text);
-
+		long time = System.currentTimeMillis();
+		String format = TimeUtil.FILE_FORMAT;
+		String fileName = TimeUtil.format(time, format) + ".txt";
+		String crashFolder = MediaUtil.getFileDir("crash_log");
+		String filePath = crashFolder + "/" + fileName;
+		LogUtil.e(TAG, builder.toString());
+		FileUtil.write(filePath, builder.toString());
+		showMessage("application cashed!");
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(2500);
 		} catch (Exception e) {
-			//
 		}
-
-		// TODO save crash file to local
 		System.exit(1);
 	}
 
-	private void showToast(final String message) {
+	private void showMessage(final String message) {
 		new Thread() {
 			@Override
 			public void run() {

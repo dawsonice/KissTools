@@ -16,7 +16,7 @@ KissTools.setContext(context);
 Then enjoy tools below!
 
 ```
-|── KissEnv.java
+├── KissEnv.java
 ├── KissTools.java
 ├── builder
 │   └── RichTextBuilder.java
@@ -26,38 +26,48 @@ Then enjoy tools below!
 │   └── KVPreference.java
 ├── formatter
 │   └── DiskFormatter.java
+├── helper
+│   ├── CrashHelper.java
+│   └── ViewHolder.java
 ├── shell
 │   ├── ShellResult.java
 │   └── ShellUtil.java
-└── utils
-    ├── ActivityUtil.java
-    ├── BitmapUtil.java
-    ├── BundleUtil.java
-    ├── ClipboardUtil.java
-    ├── CommonUtil.java
-    ├── DeviceUtil.java
-    ├── DrawableUtil.java
-    ├── FileUtil.java
-    ├── ImageSize.java
-    ├── JSONUtil.java
-    ├── KeyboardUtil.java
-    ├── LogUtil.java
-    ├── MediaUtil.java
-    ├── MessageUtil.java
-    ├── NetworkUtil.java
-    ├── NumberUtil.java
-    ├── PackageUtil.java
-    ├── ResourceUtil.java
-    ├── SecurityUtil.java
-    ├── StringUtil.java
-    ├── SystemUtil.java
-    ├── TimeUtil.java
-    ├── ToastUtil.java
-    ├── UrlUtil.java
-    ├── UserUtil.java
-    ├── VerifyUtil.java
-    ├── ViewUtil.java
-    └── ZipUtil.java
+├── thread
+│   └── KissExecutor.java
+├── utils
+│   ├── ActivityUtil.java
+│   ├── BitmapUtil.java
+│   ├── BundleUtil.java
+│   ├── ClipboardUtil.java
+│   ├── CloseUtil.java
+│   ├── CommonUtil.java
+│   ├── DebugUtil.java
+│   ├── DeviceUtil.java
+│   ├── DrawableUtil.java
+│   ├── FileUtil.java
+│   ├── ImageSize.java
+│   ├── IoUtil.java
+│   ├── JSONUtil.java
+│   ├── KeyboardUtil.java
+│   ├── LogUtil.java
+│   ├── MediaUtil.java
+│   ├── MessageUtil.java
+│   ├── NetworkUtil.java
+│   ├── NumberUtil.java
+│   ├── PackageUtil.java
+│   ├── ResourceUtil.java
+│   ├── SecurityUtil.java
+│   ├── StringUtil.java
+│   ├── SystemUtil.java
+│   ├── TimeUtil.java
+│   ├── ToastUtil.java
+│   ├── UrlUtil.java
+│   ├── UserUtil.java
+│   ├── VerifyUtil.java
+│   ├── ViewUtil.java
+│   └── ZipUtil.java
+└── view
+└── FullscreenView.java
 ```
 
 ## Contact me

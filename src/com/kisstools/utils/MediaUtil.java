@@ -38,29 +38,17 @@ public class MediaUtil {
 		return appDir;
 	}
 
-	public static String getUserDir() {
+	public static String getFileDir(String dirName) {
 		String appDir = getAppDir();
 		if (TextUtils.isEmpty(appDir)) {
 			return null;
 		}
 
-		String uid = UserUtil.getUserId();
-		String userDir = appDir;
-		if (TextUtils.isEmpty(uid)) {
-			LogUtil.w(TAG, "user id not set!");
-		} else {
-			userDir = userDir + "/" + uid;
+		if (TextUtils.isEmpty(dirName)) {
+			return appDir;
 		}
-		return userDir;
-	}
-
-	public static String getUserDir(String dirName) {
-		String userDir = getUserDir();
-		if (TextUtils.isEmpty(userDir)) {
-			return null;
-		} else {
-			return userDir + "/" + dirName;
-		}
+		String fileDir = appDir + "/" + dirName;
+		return fileDir;
 	}
 
 	public static boolean mediaMounted() {

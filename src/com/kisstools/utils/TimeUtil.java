@@ -21,6 +21,7 @@ public class TimeUtil {
 
 	public static final String DEFAULT_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	public static final String UTC_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+	public static final String FILE_FORMAT = "yyyy_MM_dd_HH_mm_ss_SSS";
 
 	public static long format(String time, String format) {
 		if (TextUtils.isEmpty(time)) {
