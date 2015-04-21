@@ -36,6 +36,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -45,6 +47,17 @@ public class SystemUtil {
 	public static final String TAG = "SystemUtil";
 	public static final int MAX_BRIGHTNESS = 255;
 	public static final int MIN_BRIGHTNESS = 0;
+
+	public static int getActionBarHeight(Context context) {
+		TypedValue tv = new TypedValue();
+		int height = 0;
+		int resId = android.R.attr.actionBarSize;
+		if (context.getTheme().resolveAttribute(resId, tv, true)) {
+			DisplayMetrics dm = context.getResources().getDisplayMetrics();
+			height = TypedValue.complexToDimensionPixelSize(tv.data, dm);
+		}
+		return height;
+	}
 
 	public static int getStatusBarHeight(Context context) {
 		int height = 0;

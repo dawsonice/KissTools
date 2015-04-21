@@ -192,7 +192,7 @@ public class BitmapUtil {
 			File outFile = new File(absPath);
 			FileOutputStream fos = new FileOutputStream(outFile);
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
-			bitmap.compress(Bitmap.CompressFormat.JPEG, quality, bos);
+			bitmap.compress(Bitmap.CompressFormat.PNG, quality, bos);
 			bos.flush();
 			bos.close();
 		} catch (IOException e) {

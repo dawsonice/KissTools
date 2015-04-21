@@ -522,17 +522,42 @@ public class FileUtil {
 		return true;
 	}
 
+	public static final boolean write(String absPath, InputStream ips) {
+		if (!create(absPath, true)) {
+			return false;
+		}
+
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(absPath);
+			byte buffer[] = new byte[IO_BUFFER_SIZE];
+			int count = ips.read(buffer);
+			for (; count != -1;) {
+				fos.write(buffer, 0, count);
+				count = ips.read(buffer);
+			}
+			fos.flush();
+		} catch (Exception e) {
+			//
+			return false;
+		} finally {
+			CloseUtil.close(fos);
+		}
+
+		return true;
+	}
+
 	public static final String read(String absPath) {
 		String text = null;
 		InputStream ips = null;
 		try {
 			ips = new FileInputStream(absPath);
-			ByteArrayBuffer baf = new ByteArrayBuffer(1024);
-			byte buffer[] = new byte[1024];
-			int index = ips.read(buffer);
-			for (; index != -1;) {
-				baf.append(buffer, 0, index);
-				index = ips.read(buffer);
+			ByteArrayBuffer baf = new ByteArrayBuffer(IO_BUFFER_SIZE);
+			byte buffer[] = new byte[IO_BUFFER_SIZE];
+			int count = ips.read(buffer);
+			for (; count != -1;) {
+				baf.append(buffer, 0, count);
+				count = ips.read(buffer);
 			}
 			text = new String(baf.toByteArray());
 		} catch (Exception e) {
@@ -541,5 +566,17 @@ public class FileUtil {
 			CloseUtil.close(ips);
 		}
 		return text;
+	}
+
+	public static final InputStream getStream(String absPath) {
+		InputStream inputStream = null;
+
+		try {
+			inputStream = new FileInputStream(absPath);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return inputStream;
 	}
 }

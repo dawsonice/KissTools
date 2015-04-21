@@ -34,6 +34,7 @@ public class ViewHolder {
 			view = convertView.findViewById(id);
 			views.put(id, view);
 		}
+		
 		return (T) view;
 	}
 }
