@@ -552,19 +552,33 @@ public class FileUtil {
 		InputStream ips = null;
 		try {
 			ips = new FileInputStream(absPath);
-			ByteArrayBuffer baf = new ByteArrayBuffer(IO_BUFFER_SIZE);
-			byte buffer[] = new byte[IO_BUFFER_SIZE];
-			int count = ips.read(buffer);
-			for (; count != -1;) {
-				baf.append(buffer, 0, count);
-				count = ips.read(buffer);
-			}
-			text = new String(baf.toByteArray());
+			text = read(ips);
 		} catch (Exception e) {
 
 		} finally {
 			CloseUtil.close(ips);
 		}
+		return text;
+	}
+
+	public static final String read(InputStream inputStream) {
+		if (inputStream == null) {
+			return null;
+		}
+
+		ByteArrayBuffer baf = new ByteArrayBuffer(IO_BUFFER_SIZE);
+		byte buffer[] = new byte[IO_BUFFER_SIZE];
+		try {
+
+			int count = inputStream.read(buffer);
+			for (; count != -1;) {
+				baf.append(buffer, 0, count);
+				count = inputStream.read(buffer);
+			}
+		} catch (Exception e) {
+
+		}
+		String text = new String(baf.toByteArray());
 		return text;
 	}
 
